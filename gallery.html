@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Photo Gallery - GSSS Budhwali. Browse our school events, activities, and memorable moments.">
+    <title>Gallery - GSSS Budhwali</title>
+
+    <!-- Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&family=Roboto:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+
+    <!-- Favicon -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+
+    <style>
+        /* Gallery Specific Styles */
+        .gallery-filter {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-2xl);
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--color-white);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-full);
+            font-size: var(--text-base);
+            font-weight: 500;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--color-saffron), var(--color-green));
+            color: var(--color-white);
+            border-color: transparent;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: var(--z-modal);
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-lg);
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox__content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .lightbox__image {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: var(--radius-lg);
+        }
+
+        .lightbox__info {
+            background: var(--color-white);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            margin-top: var(--space-md);
+        }
+
+        .lightbox__title {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .lightbox__description {
+            color: var(--color-text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .lightbox__date {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+        }
+
+        .lightbox__close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            background: var(--color-white);
+            border: none;
+            border-radius: var(--radius-full);
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-base);
+        }
+
+        .lightbox__close:hover {
+            background: var(--color-saffron);
+            color: var(--color-white);
+            transform: rotate(90deg);
+        }
+
+        .lightbox__nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: var(--radius-full);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .lightbox__nav:hover {
+            background: var(--color-saffron);
+            color: var(--color-white);
+        }
+
+        .lightbox__nav--prev {
+            left: 20px;
+        }
+
+        .lightbox__nav--next {
+            right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header__top">
+            <div class="container">
+                <span class="lang-en">Satyameva Jayate - Truth Alone Triumphs</span>
+                <span class="lang-hi hidden">सत्यमेव जयते - सत्य की ही विजय होती है</span>
+            </div>
+        </div>
+
+        <div class="header__main">
+            <div class="container">
+                <div class="header__content">
+                    <div class="header__logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg"
+                            alt="National Emblem of India" class="header__emblem">
+                        <div class="header__title">
+                            <h1 class="header__name lang-en">GSSS Budhwali</h1>
+                            <h1 class="header__name lang-hi hidden">राजकीय उच्च माध्यमिक विद्यालय</h1>
+                            <p class="header__name-hindi lang-en">Government Senior Secondary School Budhwali</p>
+                            <p class="header__name-hindi lang-hi hidden">बुधवाली,चूरू</p>
+                        </div>
+                    </div>
+
+                    <div class="header__actions">
+                        <a href="index.html" class="btn btn--outline"><span class="lang-en">Home</span><span
+                                class="lang-hi hidden">होम</span></a>
+                        <a href="notice.html" class="btn btn--outline"><span class="lang-en">Notice</span><span
+                                class="lang-hi hidden">सूचना</span></a>
+                        <button class="lang-toggle" id="langToggle" aria-label="Toggle Language">
+                            <span class="lang-en">हिंदी</span>
+                            <span class="lang-hi hidden">English</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="section" style="padding-top: var(--space-2xl);">
+        <div class="container">
+            <div class="section-heading">
+                <h2 class="section-heading__title lang-en">Photo Gallery</h2>
+                <h2 class="section-heading__title lang-hi hidden">फोटो गैलरी</h2>
+                <p class="section-heading__subtitle lang-en">Capturing memories and moments</p>
+                <p class="section-heading__subtitle lang-hi hidden">यादों और पलों को कैद करना</p>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="gallery-filter">
+                <button class="filter-btn active" data-filter="all">
+                    <span class="lang-en">All</span><span class="lang-hi hidden">सभी</span>
+                </button>
+                <button class="filter-btn" data-filter="events">
+                    <span class="lang-en">Events</span><span class="lang-hi hidden">कार्यक्रम</span>
+                </button>
+                <button class="filter-btn" data-filter="infrastructure">
+                    <span class="lang-en">Infrastructure</span><span class="lang-hi hidden">बुनियादी ढांचा</span>
+                </button>
+                <button class="filter-btn" data-filter="activities">
+                    <span class="lang-en">Activities</span><span class="lang-hi hidden">गतिविधियां</span>
+                </button>
+                <button class="filter-btn" data-filter="awards">
+                    <span class="lang-en">Awards</span><span class="lang-hi hidden">पुरस्कार</span>
+                </button>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div class="grid grid--3" id="galleryGrid">
+                <!-- Sample Gallery Items -->
+                <div class="gallery-card reveal" data-category="events" data-index="0">
+                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=600" alt="Annual Day"
+                        class="gallery-card__image" loading="lazy">
+                    <div class="gallery-card__overlay">
+                        <div class="gallery-card__title lang-en">Annual Day Celebration 2024</div>
+                        <div class="gallery-card__title lang-hi hidden">वार्षिक दिवस समारोह 2024</div>
+                        <div class="gallery-card__date">March 15, 2024</div>
+                    </div>
+                </div>
+
+                <div class="gallery-card reveal" data-category="activities" data-index="1">
+                    <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=600" alt="Sports Day"
+                        class="gallery-card__image" loading="lazy">
+                    <div class="gallery-card__overlay">
+                        <div class="gallery-card__title lang-en">Annual Sports Day</div>
+                        <div class="gallery-card__title lang-hi hidden">वार्षिक खेल दिवस</div>
+                        <div class="gallery-card__date">January 26, 2024</div>
+                    </div>
+                </div>
+
+                <div class="gallery-card reveal" data-category="events" data-index="2">
+                    <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600"
+                        alt="Science Exhibition" class="gallery-card__image" loading="lazy">
+                    <div class="gallery-card__overlay">
+                        <div class="gallery-card__title lang-en">Science Exhibition 2024</div>
+                        <div class="gallery-card__title lang-hi hidden">विज्ञान प्रदर्शनी 2024</div>
+                        <div class="gallery-card__date">February 20, 2024</div>
+                    </div>
+                </div>
+
+                <div class="gallery-card reveal" data-category="infrastructure" data-index="3">
+                    <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=600"
+                        alt="Computer Lab" class="gallery-card__image" loading="lazy">
+                    <div class="gallery-card__overlay">
+                        <div class="gallery-card__title lang-en">New Computer Laboratory</div>
+                        <div class="gallery-card__title lang-hi hidden">नई कंप्यूटर प्रयोगशाला</div>
+                        <div class="gallery-card__date">December 10, 2023</div>
+                    </div>
+                </div>
+
+                <div class="gallery-card reveal" data-category="awards" data-index="4">
+                    <img src="https://images.unsplash.com/photo-1567427018141-0584cfcbf1b8?q=80&w=600"
+                        alt="Awards Ceremony" class="gallery-card__image" loading="lazy">
+                    <div class="gallery-card__overlay">
+                        <div class="gallery-card__title lang-en">Board Exam Toppers 2024</div>
+                        <div class="gallery-card__title lang-hi hidden">बोर्ड परीक्षा टॉपर्स 2024</div>
+                        <div class="gallery-card__date">May 18, 2024</div>
+                    </div>
+                </div>
+
+                <div class="gallery-card reveal" data-category="events" data-index="5">
+                    <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=600"
+                        alt="Independence Day" class="gallery-card__image" loading="lazy">
+                    <div class="gallery-card__overlay">
+                        <div class="gallery-card__title lang-en">Independence Day Celebration</div>
+                        <div class="gallery-card__title lang-hi hidden">स्वतंत्रता दिवस समारोह</div>
+                        <div class="gallery-card__date">August 15, 2023</div>
+                    </div>
+                </div>
+
+                <div class="gallery-card reveal" data-category="infrastructure" data-index="6">
+                    <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=600" alt="Library"
+                        class="gallery-card__image" loading="lazy">
+                    <div class="gallery-card__overlay">
+                        <div class="gallery-card__title lang-en">School Library</div>
+                        <div class="gallery-card__title lang-hi hidden">विद्यालय पुस्तकालय</div>
+                        <div class="gallery-card__date">November 5, 2023</div>
+                    </div>
+                </div>
+
+                <div class="gallery-card reveal" data-category="activities" data-index="7">
+                    <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=600"
+                        alt="Cultural Program" class="gallery-card__image" loading="lazy">
+                    <div class="gallery-card__overlay">
+                        <div class="gallery-card__title lang-en">Cultural Program</div>
+                        <div class="gallery-card__title lang-hi hidden">सांस्कृतिक कार्यक्रम</div>
+                        <div class="gallery-card__date">October 2, 2023</div>
+                    </div>
+                </div>
+
+                <div class="gallery-card reveal" data-category="events" data-index="8">
+                    <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=600" alt="Book Fair"
+                        class="gallery-card__image" loading="lazy">
+                    <div class="gallery-card__overlay">
+                        <div class="gallery-card__title lang-en">Annual Book Fair</div>
+                        <div class="gallery-card__title lang-hi hidden">वार्षिक पुस्तक मेला</div>
+                        <div class="gallery-card__date">September 14, 2023</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox__content">
+            <button class="lightbox__close" id="lightboxClose">×</button>
+            <button class="lightbox__nav lightbox__nav--prev" id="lightboxPrev">‹</button>
+            <button class="lightbox__nav lightbox__nav--next" id="lightboxNext">›</button>
+            <img src="" alt="" class="lightbox__image" id="lightboxImage">
+            <div class="lightbox__info">
+                <h3 class="lightbox__title" id="lightboxTitle"></h3>
+                <p class="lightbox__description" id="lightboxDescription"></p>
+                <p class="lightbox__date" id="lightboxDate"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__bottom">
+                <p>© 2024 GSSS Budhwali. <span class="lang-en">All rights reserved.</span><span
+                        class="lang-hi hidden">सर्वाधिकार सुरक्षित।</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/918112287006" target="_blank" class="whatsapp-float" aria-label="Chat on WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path
+                d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z" />
+        </svg>
+    </a>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/gallery.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Notice Board - GSSS Budhwali. Stay updated with latest school announcements and notices.">
+    <title>Notice Board - GSSS Budhwali</title>
+
+    <!-- Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght=400;600;700&family=Inter:wght@400;500;600&family=Roboto:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+
+    <!-- Favicon -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header__top">
+            <div class="container">
+                <span class="lang-en">Satyameva Jayate - Truth Alone Triumphs</span>
+                <span class="lang-hi hidden">सत्यमेव जयते - सत्य की ही विजय होती है</span>
+            </div>
+        </div>
+
+        <div class="header__main">
+            <div class="container">
+                <div class="header__content">
+                    <div class="header__logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg"
+                            alt="National Emblem of India" class="header__emblem">
+                        <div class="header__title">
+                            <h1 class="header__name lang-en">GSSS Budhwali</h1>
+                            <h1 class="header__name lang-hi hidden">राजकीय उच्च माध्यमिक विद्यालय</h1>
+                            <p class="header__name-hindi lang-en">Government Senior Secondary School Budhwali</p>
+                            <p class="header__name-hindi lang-hi hidden">बुधवाली,चूरू</p>
+                        </div>
+                    </div>
+
+                    <div class="header__actions">
+                        <a href="index.html" class="btn btn--outline"><span class="lang-en">Home</span><span
+                                class="lang-hi hidden">होम</span></a>
+                        <a href="gallery.html" class="btn btn--outline"><span class="lang-en">Gallery</span><span
+                                class="lang-hi hidden">गैलरी</span></a>
+                        <button class="lang-toggle" id="langToggle" aria-label="Toggle Language">
+                            <span class="lang-en">हिंदी</span>
+                            <span class="lang-hi hidden">English</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Notice Ticker -->
+    <div class="notice-ticker">
+        <div class="container">
+            <div class="notice-ticker__wrapper">
+                <div class="notice-ticker__label">
+                    <span class="lang-en">🔔 URGENT</span>
+                    <span class="lang-hi hidden">🔔 अत्यावश्यक</span>
+                </div>
+                <div class="notice-ticker__content">
+                    <div class="notice-ticker__text lang-en">
+                        Last date for Class 11th admission: December 30, 2024 | Mid-day meal scheme form submission:
+                        December 25, 2024 | Annual exam timetable announced - Check notice section
+                    </div>
+                    <div class="notice-ticker__text lang-hi hidden">
+                        कक्षा 11वीं में प्रवेश की अंतिम तिथि: 30 दिसंबर, 2024 | मध्याह्न भोजन योजना फॉर्म जमा करना: 25
+                        दिसंबर, 2024 | वार्षिक परीक्षा समय सारणी घोषित - सूचना अनुभाग में देखें
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="section" style="padding-top: var(--space-2xl);">
+        <div class="container">
+            <div class="section-heading">
+                <h2 class="section-heading__title lang-en">Notice Board</h2>
+                <h2 class="section-heading__title lang-hi hidden">सूचना पट्ट</h2>
+                <p class="section-heading__subtitle lang-en">Stay updated with latest announcements</p>
+                <p class="section-heading__subtitle lang-hi hidden">नवीनतम घोषणाओं के साथ अपडेट रहें</p>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="gallery-filter" style="margin-bottom: var(--space-xl);">
+                <button class="filter-btn active" data-filter="all">
+                    <span class="lang-en">All Notices</span><span class="lang-hi hidden">सभी सूचनाएं</span>
+                </button>
+                <button class="filter-btn" data-filter="admissions">
+                    <span class="lang-en">Admissions</span><span class="lang-hi hidden">प्रवेश</span>
+                </button>
+                <button class="filter-btn" data-filter="exams">
+                    <span class="lang-en">Exams</span><span class="lang-hi hidden">परीक्षाएं</span>
+                </button>
+                <button class="filter-btn" data-filter="events">
+                    <span class="lang-en">Events</span><span class="lang-hi hidden">कार्यक्रम</span>
+                </button>
+                <button class="filter-btn" data-filter="schemes">
+                    <span class="lang-en">Schemes</span><span class="lang-hi hidden">योजनाएं</span>
+                </button>
+            </div>
+
+            <!-- Notices Container -->
+            <div id="noticesContainer">
+                <!-- Sample Notices -->
+                <div class="notice-card notice-card--urgent reveal" data-category="admissions">
+                    <div class="notice-card__header">
+                        <h3 class="notice-card__title lang-en">Class 11th Admission Notice 2024-25</h3>
+                        <h3 class="notice-card__title lang-hi hidden">कक्षा 11वीं प्रवेश सूचना 2024-25</h3>
+                        <span class="notice-card__date">December 15, 2024</span>
+                    </div>
+                    <div class="notice-card__content lang-en">
+                        <p>Applications are invited from eligible students for admission to Class 11th (Science,
+                            Commerce, Arts streams) for the academic year 2024-25. Last date for application: December
+                            30, 2024.</p>
+                    </div>
+                    <div class="notice-card__content lang-hi hidden">
+                        <p>शैक्षणिक वर्ष 2024-25 के लिए कक्षा 11वीं (विज्ञान, वाणिज्य, कला धाराओं) में प्रवेश के लिए
+                            पात्र छात्रों से आवेदन आमंत्रित किए जाते हैं। आवेदन की अंतिम तिथि: 30 दिसंबर, 2024।</p>
+                    </div>
+                    <div class="notice-card__actions">
+                        <a href="#" class="btn btn--secondary btn--small">
+                            <span class="lang-en">📄 Download Form</span>
+                            <span class="lang-hi hidden">📄 फॉर्म डाउनलोड करें</span>
+                        </a>
+                        <a href="#" class="btn btn--outline btn--small">
+                            <span class="lang-en">View Details</span>
+                            <span class="lang-hi hidden">विवरण देखें</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="notice-card reveal" data-category="exams">
+                    <div class="notice-card__header">
+                        <h3 class="notice-card__title lang-en">Annual Examination Timetable 2024</h3>
+                        <h3 class="notice-card__title lang-hi hidden">वार्षिक परीक्षा समय सारणी 2024</h3>
+                        <span class="notice-card__date">December 10, 2024</span>
+                    </div>
+                    <div class="notice-card__content lang-en">
+                        <p>The annual examination for classes 9th to 12th will commence from February 15, 2025. Students
+                            are advised to check the detailed timetable and prepare accordingly.</p>
+                    </div>
+                    <div class="notice-card__content lang-hi hidden">
+                        <p>कक्षा 9वीं से 12वीं की वार्षिक परीक्षा 15 फरवरी, 2025 से शुरू होगी। छात्रों को सलाह दी जाती
+                            है कि वे विस्तृत समय सारणी देखें और तदनुसार तैयारी करें।</p>
+                    </div>
+                    <div class="notice-card__actions">
+                        <a href="#" class="btn btn--secondary btn--small">
+                            <span class="lang-en">📄 Download Timetable</span>
+                            <span class="lang-hi hidden">📄 समय सारणी डाउनलोड करें</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="notice-card reveal" data-category="schemes">
+                    <div class="notice-card__header">
+                        <h3 class="notice-card__title lang-en">Mid-Day Meal Scheme Update</h3>
+                        <h3 class="notice-card__title lang-hi hidden">मध्याह्न भोजन योजना अपडेट</h3>
+                        <span class="notice-card__date">December 8, 2024</span>
+                    </div>
+                    <div class="notice-card__content lang-en">
+                        <p>Updated forms for Mid-Day Meal scheme are now available. Parents need to submit the forms by
+                            December 25, 2024, to ensure continuous meal service for their children.</p>
+                    </div>
+                    <div class="notice-card__content lang-hi hidden">
+                        <p>मध्याह्न भोजन योजना के लिए अपडेट किए गए फॉर्म अब उपलब्ध हैं। अभिभावकों को अपने बच्चों के लिए
+                            निरंतर भोजन सेवा सुनिश्चित करने के लिए 25 दिसंबर, 2024 तक फॉर्म जमा करना होगा।</p>
+                    </div>
+                    <div class="notice-card__actions">
+                        <a href="#" class="btn btn--secondary btn--small">
+                            <span class="lang-en">📄 Download Form</span>
+                            <span class="lang-hi hidden">📄 फॉर्म डाउनलोड करें</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="notice-card reveal" data-category="events">
+                    <div class="notice-card__header">
+                        <h3 class="notice-card__title lang-en">Republic Day Celebration 2025</h3>
+                        <h3 class="notice-card__title lang-hi hidden">गणतंत्र दिवस समारोह 2025</h3>
+                        <span class="notice-card__date">December 5, 2024</span>
+                    </div>
+                    <div class="notice-card__content lang-en">
+                        <p>Republic Day will be celebrated on January 26, 2025. Students interested in participating in
+                            cultural programs should register with their class teachers by January 10, 2025.</p>
+                    </div>
+                    <div class="notice-card__content lang-hi hidden">
+                        <p>26 जनवरी, 2025 को गणतंत्र दिवस मनाया जाएगा। सांस्कृतिक कार्यक्रमों में भाग लेने में रुचि रखने
+                            वाले छात्रों को 10 जनवरी, 2025 तक अपने कक्षा शिक्षकों के साथ पंजीकरण करना चाहिए।</p>
+                    </div>
+                    <div class="notice-card__actions">
+                        <a href="#" class="btn btn--outline btn--small">
+                            <span class="lang-en">View Details</span>
+                            <span class="lang-hi hidden">विवरण देखें</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="notice-card reveal" data-category="exams">
+                    <div class="notice-card__header">
+                        <h3 class="notice-card__title lang-en">Pre-Board Examination Notice</h3>
+                        <h3 class="notice-card__title lang-hi hidden">प्री-बोर्ड परीक्षा सूचना</h3>
+                        <span class="notice-card__date">November 28, 2024</span>
+                    </div>
+                    <div class="notice-card__content lang-en">
+                        <p>Pre-board examinations for classes 10th and 12th will be conducted from January 15-30, 2025.
+                            This is mandatory for all students to assess their preparation level.</p>
+                    </div>
+                    <div class="notice-card__content lang-hi hidden">
+                        <p>कक्षा 10वीं और 12वीं के लिए प्री-बोर्ड परीक्षा 15-30 जनवरी, 2025 तक आयोजित की जाएगी। यह सभी
+                            छात्रों के लिए अनिवार्य है ताकि उनकी तैयारी के स्तर का आकलन किया जा सके।</p>
+                    </div>
+                </div>
+
+                <div class="notice-card reveal" data-category="admissions">
+                    <div class="notice-card__header">
+                        <h3 class="notice-card__title lang-en">Transfer Certificate Guidelines</h3>
+                        <h3 class="notice-card__title lang-hi hidden">स्थानांतरण प्रमाण पत्र दिशानिर्देश</h3>
+                        <span class="notice-card__date">November 20, 2024</span>
+                    </div>
+                    <div class="notice-card__content lang-en">
+                        <p>Students requiring Transfer Certificates should apply through proper channel with all
+                            required documents. Processing time: 7-10 working days.</p>
+                    </div>
+                    <div class="notice-card__content lang-hi hidden">
+                        <p>स्थानांतरण प्रमाण पत्र की आवश्यकता वाले छात्रों को सभी आवश्यक दस्तावेजों के साथ उचित चैनल के
+                            माध्यम से आवेदन करना चाहिए। प्रसंस्करण समय: 7-10 कार्य दिवस।</p>
+                    </div>
+                    <div class="notice-card__actions">
+                        <a href="#" class="btn btn--secondary btn--small">
+                            <span class="lang-en">📄 Download Application</span>
+                            <span class="lang-hi hidden">📄 आवेदन डाउनलोड करें</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="notice-card reveal" data-category="schemes">
+                    <div class="notice-card__header">
+                        <h3 class="notice-card__title lang-en">Scholarship Application - SC/ST Students</h3>
+                        <h3 class="notice-card__title lang-hi hidden">छात्रवृत्ति आवेदन - अनुसूचित जाति/जनजाति छात्र
+                        </h3>
+                        <span class="notice-card__date">November 15, 2024</span>
+                    </div>
+                    <div class="notice-card__content lang-en">
+                        <p>SC/ST scholarship applications for the academic year 2024-25 are now open. Eligible students
+                            should submit applications online before January 15, 2025.</p>
+                    </div>
+                    <div class="notice-card__content lang-hi hidden">
+                        <p>शैक्षणिक वर्ष 2024-25 के लिए अनुसूचित जाति/अनुसूचित जनजाति छात्रवृत्ति आवेदन अब खुले हैं।
+                            पात्र छात्रों को 15 जनवरी, 2025 से पहले ऑनलाइन आवेदन जमा करना चाहिए।</p>
+                    </div>
+                    <div class="notice-card__actions">
+                        <a href="https://scholarships.gov.in" target="_blank" class="btn btn--secondary btn--small">
+                            <span class="lang-en">🔗 Apply Online</span>
+                            <span class="lang-hi hidden">🔗 ऑनलाइन आवेदन करें</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="notice-card reveal" data-category="events">
+                    <div class="notice-card__header">
+                        <h3 class="notice-card__title lang-en">Parent-Teacher Meeting</h3>
+                        <h3 class="notice-card__title lang-hi hidden">अभिभावक-शिक्षक बैठक</h3>
+                        <span class="notice-card__date">November 10, 2024</span>
+                    </div>
+                    <div class="notice-card__content lang-en">
+                        <p>Parent-Teacher Meeting will be held on December 28, 2024, from 10:00 AM to 1:00 PM. Parents
+                            are requested to attend to discuss their ward's progress.</p>
+                    </div>
+                    <div class="notice-card__content lang-hi hidden">
+                        <p>अभिभावक-शिक्षक बैठक 28 दिसंबर, 2024 को सुबह 10:00 बजे से दोपहर 1:00 बजे तक आयोजित की जाएगी।
+                            अभिभावकों से अनुरोध है कि वे अपने वार्ड की प्रगति पर चर्चा करने के लिए उपस्थित हों।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__bottom">
+                <p>© 2024 GSSS Budhwali. <span class="lang-en">All rights reserved.</span><span
+                        class="lang-hi hidden">सर्वाधिकार सुरक्षित।</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/918112287006" target="_blank" class="whatsapp-float" aria-label="Chat on WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path
+                d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z" />
+        </svg>
+    </a>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script>
+        // Notice page specific JavaScript
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const noticeCards = document.querySelectorAll('.notice-card');
+
+        // Filter functionality
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                // Update active button
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+
+                const filter = this.dataset.filter;
+
+                // Filter notices
+                noticeCards.forEach(card => {
+                    const category = card.dataset.category;
+
+                    if (filter === 'all' || category === filter) {
+                        card.style.display = 'block';
+                        setTimeout(() => card.classList.add('active'), 10);
+                    } else {
+                        card.style.display = 'none';
+                        card.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
