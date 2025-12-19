@@ -152,14 +152,28 @@ function prevImage() {
 }
 
 function updateLightbox() {
-    const data = galleryData[currentImageIndex];
+    const visibleCards = Array.from(galleryCards).filter(card =>
+        card.style.display !== 'none'
+    );
+
+    const currentCard = visibleCards[currentImageIndex];
+    if (!currentCard) return;
+
     const currentLang = window.gsssApp ? window.gsssApp.currentLang() : 'en';
 
-    lightboxImage.src = data.image;
-    lightboxImage.alt = data.title[currentLang];
-    lightboxTitle.textContent = data.title[currentLang];
-    lightboxDescription.textContent = data.description[currentLang];
-    lightboxDate.textContent = data.date;
+    // Get data from card data attributes (works with both static and Sanity data)
+    const imageUrl = currentCard.dataset.imageUrl || currentCard.querySelector('.gallery-card__image')?.src;
+    const titleEn = currentCard.dataset.titleEn || currentCard.querySelector('.gallery-card__title.lang-en')?.textContent || currentCard.querySelector('.gallery-card__title')?.textContent;
+    const titleHi = currentCard.dataset.titleHi || currentCard.querySelector('.gallery-card__title.lang-hi')?.textContent || titleEn;
+    const descEn = currentCard.dataset.descEn || '';
+    const descHi = currentCard.dataset.descHi || descEn;
+    const date = currentCard.dataset.date || currentCard.querySelector('.gallery-card__date')?.textContent;
+
+    lightboxImage.src = imageUrl;
+    lightboxImage.alt = currentLang === 'hi' ? titleHi : titleEn;
+    lightboxTitle.textContent = currentLang === 'hi' ? titleHi : titleEn;
+    lightboxDescription.textContent = currentLang === 'hi' ? descHi : descEn;
+    lightboxDate.textContent = date ? new Date(date).toLocaleDateString() : '';
 }
 
 // ========== Initialize Lightbox Event Listeners ==========
@@ -225,6 +239,28 @@ function setupLazyLoading() {
     }
 }
 
+// ========== Re-initialize after Sanity renders ==========
+function reinitializeGallery() {
+    // Re-query gallery cards after Sanity updates DOM
+    const newGalleryCards = document.querySelectorAll('.gallery-card');
+
+    // Rebind click handlers
+    newGalleryCards.forEach((card, index) => {
+        card.addEventListener('click', () => {
+            openLightbox(parseInt(card.dataset.index));
+        });
+    });
+
+    // Trigger reveal animations
+    setTimeout(() => {
+        newGalleryCards.forEach((el, index) => {
+            setTimeout(() => {
+                el.classList.add('active');
+            }, index * 50);
+        });
+    }, 100);
+}
+
 // ========== Initialization ==========
 document.addEventListener('DOMContentLoaded', () => {
     initializeFilters();
@@ -245,5 +281,6 @@ document.addEventListener('DOMContentLoaded', () => {
 window.galleryApp = {
     filterGallery,
     openLightbox,
-    closeLightbox
+    closeLightbox,
+    reinitializeGallery
 };

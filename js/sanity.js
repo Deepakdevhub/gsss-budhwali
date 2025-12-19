@@ -173,8 +173,14 @@ async function renderGallery() {
   container.innerHTML = images.map((img, index) => `
     <div class="gallery-card reveal ${index % 3 === 1 ? 'reveal-delay-1' : index % 3 === 2 ? 'reveal-delay-2' : ''}" 
          data-category="${img.category}" 
-         data-index="${index}">
-      <img src="${sanityImageUrl(img.image, { width: 600, height: 450 })}" 
+         data-index="${index}"
+         data-image-url="${sanityImageUrl(img.image, { width: 1200, fit: 'max' })}"
+         data-title-en="${img.title.en || ''}"
+         data-title-hi="${img.title.hi || ''}"
+         data-desc-en="${img.description?.en || ''}"
+         data-desc-hi="${img.description?.hi || ''}"
+         data-date="${img.date}">
+      <img src="${sanityImageUrl(img.image, { width: 800, fit: 'max' })}" 
            alt="${img.title[currentLang] || img.title.en}" 
            class="gallery-card__image" 
            loading="lazy">
@@ -185,10 +191,9 @@ async function renderGallery() {
     </div>
   `).join('');
 
-  // Re-initialize gallery click handlers if gallery.js is loaded
-  if (window.galleryApp) {
-    // Reinitialize
-    initializeLightbox();
+  // Re-initialize gallery click handlers and lightbox
+  if (window.galleryApp && window.galleryApp.reinitializeGallery) {
+    window.galleryApp.reinitializeGallery();
   }
 }
 
