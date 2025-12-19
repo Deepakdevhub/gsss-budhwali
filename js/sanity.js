@@ -174,13 +174,13 @@ async function renderGallery() {
     <div class="gallery-card reveal ${index % 3 === 1 ? 'reveal-delay-1' : index % 3 === 2 ? 'reveal-delay-2' : ''}" 
          data-category="${img.category}" 
          data-index="${index}"
-         data-image-url="${sanityImageUrl(img.image, { width: 1200, fit: 'max' })}"
+         data-image-url="${sanityImageUrl(img.image, { width: 1600, fit: 'max' })}"
          data-title-en="${img.title.en || ''}"
          data-title-hi="${img.title.hi || ''}"
          data-desc-en="${img.description?.en || ''}"
          data-desc-hi="${img.description?.hi || ''}"
          data-date="${img.date}">
-      <img src="${sanityImageUrl(img.image, { width: 800, fit: 'max' })}" 
+      <img src="${sanityImageUrl(img.image, { width: 1200, fit: 'max' })}" 
            alt="${img.title[currentLang] || img.title.en}" 
            class="gallery-card__image" 
            loading="lazy">

@@ -68,11 +68,14 @@ const galleryData = [
         date: 'September 14, 2023',
         image: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=600'
     }
-];
+]
+
+    ;
 
 // ========== DOM Elements ==========
-const filterButtons = document.querySelectorAll('.filter-btn');
-const galleryCards = document.querySelectorAll('.gallery-card');
+// Use 'let' so these can be updated after Sanity renders
+let filterButtons = document.querySelectorAll('.filter-btn');
+let galleryCards = document.querySelectorAll('.gallery-card');
 const lightbox = document.getElementById('lightbox');
 const lightboxImage = document.getElementById('lightboxImage');
 const lightboxTitle = document.getElementById('lightboxTitle');
@@ -241,11 +244,12 @@ function setupLazyLoading() {
 
 // ========== Re-initialize after Sanity renders ==========
 function reinitializeGallery() {
-    // Re-query gallery cards after Sanity updates DOM
-    const newGalleryCards = document.querySelectorAll('.gallery-card');
+    // CRITICAL: Re-query and UPDATE the global galleryCards variable
+    // This ensures lightbox sees the new Sanity-rendered cards
+    galleryCards = document.querySelectorAll('.gallery-card');
 
     // Rebind click handlers
-    newGalleryCards.forEach((card, index) => {
+    galleryCards.forEach((card, index) => {
         card.addEventListener('click', () => {
             openLightbox(parseInt(card.dataset.index));
         });
@@ -253,7 +257,7 @@ function reinitializeGallery() {
 
     // Trigger reveal animations
     setTimeout(() => {
-        newGalleryCards.forEach((el, index) => {
+        galleryCards.forEach((el, index) => {
             setTimeout(() => {
                 el.classList.add('active');
             }, index * 50);
