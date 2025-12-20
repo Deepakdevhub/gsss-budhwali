@@ -96,6 +96,18 @@ const queries = {
     qualification,
     photo,
     displayOrder
+  }`,
+
+  // Fetch toppers/star performers
+  toppers: `*[_type == "topper"] | order(displayOrder asc) {
+    _id,
+    name,
+    photo,
+    percentage,
+    year,
+    achievement,
+    category,
+    displayOrder
   }`
 };
 
@@ -233,7 +245,11 @@ async function renderNotices() {
 
 // ========== Faculty Renderer ==========
 async function renderFaculty() {
-  const container = document.querySelector('#faculty .grid'); // Target the grid inside faculty section
+  // Check both homepage and faculty page
+  let container = document.getElementById('facultyGrid'); // Homepage
+  if (!container) {
+    container = document.querySelector('#faculty .grid'); // Faculty page fallback
+  }
   if (!container) return;
 
   const faculty = await fetchSanityData('faculty');
@@ -247,7 +263,7 @@ async function renderFaculty() {
 
   container.innerHTML = faculty.map((member, index) => `
     <div class="faculty-card reveal ${index % 4 === 1 ? 'reveal-delay-1' : index % 4 === 2 ? 'reveal-delay-2' : index % 4 === 3 ? 'reveal-delay-3' : ''}">
-      <img src="${sanityImageUrl(member.photo, { width: 300, height: 300 })}" 
+      <img src="${sanityImageUrl(member.photo, { width: 400, fit: 'max', quality: 80 })}" 
            alt="${member.name}" 
            class="faculty-card__photo">
       <div class="faculty-card__name">${member.name}</div>
@@ -259,26 +275,132 @@ async function renderFaculty() {
   `).join('');
 }
 
+// ========== Toppers Renderer ==========
+async function renderToppers() {
+  const container = document.getElementById('toppersGrid');
+  if (!container) return;
+
+  const toppers = await fetchSanityData('toppers');
+
+  if (!toppers || toppers.length === 0) {
+    console.log('No toppers found');
+    container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;"><span class="lang-en">No toppers data available yet.</span><span class="lang-hi hidden">अभी तक कोई टॉपर डेटा उपलब्ध नहीं है।</span></p>';
+    return;
+  }
+
+  const currentLang = window.gsssApp ? window.gsssApp.currentLang() : 'en';
+
+  container.innerHTML = toppers.map((topper, index) => `
+    <div class="topper-card reveal ${index % 4 === 1 ? 'reveal-delay-1' : index % 4 === 2 ? 'reveal-delay-2' : index % 4 === 3 ? 'reveal-delay-3' : ''}">
+      <img src="${sanityImageUrl(topper.photo, { width: 400, fit: 'max', quality: 80 })}" 
+           alt="${topper.name[currentLang] || topper.name.en}" 
+           class="topper-card__photo">
+      <div class="topper-card__info">
+        <div class="topper-card__name">${topper.name[currentLang] || topper.name.en}</div>
+        <div class="topper-card__achievement">
+          ${topper.percentage} - ${topper.year}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ========== Homepage Notices Renderer (Limited) ==========
+async function renderHomepageNotices() {
+  const container = document.getElementById('homepageNoticesGrid');
+  if (!container) return;
+
+  const notices = await fetchSanityData('notices');
+
+  if (!notices || notices.length === 0) {
+    console.log('No notices found');
+    container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;"><span class="lang-en">No notices available.</span><span class="lang-hi hidden">कोई सूचना उपलब्ध नहीं है।</span></p>';
+    return;
+  }
+
+  const currentLang = window.gsssApp ? window.gsssApp.currentLang() : 'en';
+
+  // Show only first 3 notices on homepage
+  const limitedNotices = notices.slice(0, 3);
+
+  container.innerHTML = limitedNotices.map((notice, index) => `
+    <div class="notice-card ${notice.isUrgent ? 'notice-card--urgent' : ''} reveal ${index === 1 ? 'reveal-delay-1' : index === 2 ? 'reveal-delay-2' : ''}" 
+         data-category="${notice.category}">
+      <div class="notice-card__header">
+        <h3 class="notice-card__title">${notice.title[currentLang] || notice.title.en}</h3>
+        <span class="notice-card__date">${new Date(notice.publishedAt).toLocaleDateString()}</span>
+      </div>
+      <div class="notice-card__content">
+        <p>${notice.content[currentLang] || notice.content.en}</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ========== Homepage Gallery Renderer (Limited) ==========
+async function renderHomepageGallery() {
+  const container = document.getElementById('homepageGalleryGrid');
+  if (!container) return;
+
+  const images = await fetchSanityData('gallery');
+
+  if (!images || images.length === 0) {
+    console.log('No gallery images found');
+    container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;"><span class="lang-en">No photos available.</span><span class="lang-hi hidden">कोई फोटो उपलब्ध नहीं है।</span></p>';
+    return;
+  }
+
+  const currentLang = window.gsssApp ? window.gsssApp.currentLang() : 'en';
+
+  // Show only first 3 images on homepage
+  const limitedImages = images.slice(0, 3);
+
+  container.innerHTML = limitedImages.map((img, index) => `
+    <div class="gallery-card reveal ${index === 1 ? 'reveal-delay-1' : index === 2 ? 'reveal-delay-2' : ''}">
+      <img src="${sanityImageUrl(img.image, { width: 600, fit: 'max', quality: 80 })}" 
+           alt="${img.title[currentLang] || img.title.en}" 
+           class="gallery-card__image" 
+           loading="lazy">
+      <div class="gallery-card__overlay">
+        <div class="gallery-card__title">${img.title[currentLang] || img.title.en}</div>
+        <div class="gallery-card__date">${new Date(img.date).toLocaleDateString()}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
 // ========== Initialize CMS Content ==========
 function initializeSanityCMS() {
-  // Check if we're on homepage
+  // Homepage-specific sections
+  if (document.getElementById('toppersGrid')) {
+    renderToppers();
+  }
+
+  if (document.getElementById('homepageNoticesGrid')) {
+    renderHomepageNotices();
+  }
+
+  if (document.getElementById('homepageGalleryGrid')) {
+    renderHomepageGallery();
+  }
+
+  if (document.getElementById('facultyGrid')) {
+    renderFaculty(); // Homepage faculty
+  }
+
+  // Page-specific sections
   if (document.getElementById('schemesContainer')) {
     renderSchemes();
   }
 
-  // Check if we're on gallery page
+  // Check if we're on gallery page (full gallery)
   if (document.getElementById('galleryGrid')) {
     renderGallery();
   }
 
-  // Check if we're on notice page
+  // Check if we're on notice page (full notices)
   if (document.getElementById('noticesContainer')) {
     renderNotices();
-  }
-
-  // Check if we're on a page with faculty section
-  if (document.querySelector('#faculty .grid')) {
-    renderFaculty();
   }
 }
 
@@ -297,6 +419,9 @@ window.sanityCMS = {
   renderGallery,
   renderNotices,
   renderFaculty,
+  renderToppers,
+  renderHomepageNotices,
+  renderHomepageGallery,
   refresh: initializeSanityCMS
 };
 
