@@ -243,36 +243,92 @@ async function renderNotices() {
   `).join('');
 }
 
-// ========== Faculty Renderer ==========
+// ========== Faculty Renderer with Carousel ==========
+let facultyPage = 0;
+let totalFaculty = [];
+
 async function renderFaculty() {
-  // Check both homepage and faculty page
-  let container = document.getElementById('facultyGrid'); // Homepage
-  if (!container) {
-    container = document.querySelector('#faculty .grid'); // Faculty page fallback
-  }
+  let container = document.getElementById('facultyGrid');
   if (!container) return;
 
   const faculty = await fetchSanityData('faculty');
 
   if (!faculty || faculty.length === 0) {
-    console.log('No faculty found, using static content');
+    console.log('No faculty found');
+    container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">No faculty data available.</p>';
     return;
   }
 
   const currentLang = window.gsssApp ? window.gsssApp.currentLang() : 'en';
+  totalFaculty = faculty;
 
-  container.innerHTML = faculty.map((member, index) => `
-    <div class="faculty-card reveal ${index % 4 === 1 ? 'reveal-delay-1' : index % 4 === 2 ? 'reveal-delay-2' : index % 4 === 3 ? 'reveal-delay-3' : ''}">
-      <img src="${sanityImageUrl(member.photo, { width: 400, fit: 'max', quality: 80 })}" 
-           alt="${member.name}" 
-           class="faculty-card__photo">
-      <div class="faculty-card__name">${member.name}</div>
-      <div class="faculty-card__subject">
-        <span class="lang-en">${member.subject.en}</span>
-        <span class="lang-hi hidden">${member.subject.hi}</span>
+  // On homepage: show 5 at a time with carousel
+  const isHomepage = document.getElementById('facultyCarousel');
+
+  if (isHomepage) {
+    const pageSize = 5;
+    const start = facultyPage * pageSize;
+    const end = start + pageSize;
+    const visibleFaculty = faculty.slice(start, end);
+
+    container.innerHTML = visibleFaculty.map((member, index) => `
+      <div class="faculty-card reveal">
+        <img src="${sanityImageUrl(member.photo, { width: 200, fit: 'max', quality: 80 })}" 
+             alt="${member.name}" 
+             class="faculty-card__photo">
+        <div class="faculty-card__name">${member.name}</div>
+        <div class="faculty-card__subject">
+          <span class="lang-en">${member.subject.en}</span>
+          <span class="lang-hi hidden">${member.subject.hi}</span>
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+
+    // Setup navigation
+    setupFacultyCarousel(faculty.length, pageSize);
+  } else {
+    // Full faculty page: show all
+    container.innerHTML = faculty.map((member, index) => `
+      <div class="faculty-card reveal">
+        <img src="${sanityImageUrl(member.photo, { width: 400, fit: 'max', quality: 80 })}" 
+             alt="${member.name}" 
+             class="faculty-card__photo">
+        <div class="faculty-card__name">${member.name}</div>
+        <div class="faculty-card__subject">
+          <span class="lang-en">${member.subject.en}</span>
+          <span class="lang-hi hidden">${member.subject.hi}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function setupFacultyCarousel(total, pageSize) {
+  const prevBtn = document.getElementById('facultyPrev');
+  const nextBtn = document.getElementById('facultyNext');
+  const maxPage = Math.ceil(total / pageSize) - 1;
+
+  if (prevBtn && nextBtn) {
+    prevBtn.onclick = () => {
+      if (facultyPage > 0) {
+        facultyPage--;
+        renderFaculty();
+      }
+    };
+
+    nextBtn.onclick = () => {
+      if (facultyPage < maxPage) {
+        facultyPage++;
+        renderFaculty();
+      }
+    };
+
+    // Update button states
+    prevBtn.style.opacity = facultyPage === 0 ? '0.3' : '1';
+    prevBtn.style.cursor = facultyPage === 0 ? 'not-allowed' : 'pointer';
+    nextBtn.style.opacity = facultyPage === maxPage ? '0.3' : '1';
+    nextBtn.style.cursor = facultyPage === maxPage ? 'not-allowed' : 'pointer';
+  }
 }
 
 // ========== Toppers Renderer ==========
@@ -337,36 +393,32 @@ async function renderHomepageNotices() {
   `).join('');
 }
 
-// ========== Homepage Gallery Renderer (Limited) ==========
-async function renderHomepageGallery() {
-  const container = document.getElementById('homepageGalleryGrid');
-  if (!container) return;
+// ========== Notice Ticker Renderer ==========
+async function renderNoticeTicker() {
+  const ticker = document.querySelector('.notice-ticker__content');
+  if (!ticker) return;
 
-  const images = await fetchSanityData('gallery');
+  const notices = await fetchSanityData('notices');
 
-  if (!images || images.length === 0) {
-    console.log('No gallery images found');
-    container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;"><span class="lang-en">No photos available.</span><span class="lang-hi hidden">कोई फोटो उपलब्ध नहीं है।</span></p>';
+  if (!notices || notices.length === 0) {
+    console.log('No notices for ticker');
     return;
   }
 
   const currentLang = window.gsssApp ? window.gsssApp.currentLang() : 'en';
 
-  // Show only first 3 images on homepage
-  const limitedImages = images.slice(0, 3);
+  // Filter urgent notices only, limit to 5
+  const urgentNotices = notices
+    .filter(n => n.isUrgent)
+    .slice(0, 5);
 
-  container.innerHTML = limitedImages.map((img, index) => `
-    <div class="gallery-card reveal ${index === 1 ? 'reveal-delay-1' : index === 2 ? 'reveal-delay-2' : ''}">
-      <img src="${sanityImageUrl(img.image, { width: 600, fit: 'max', quality: 80 })}" 
-           alt="${img.title[currentLang] || img.title.en}" 
-           class="gallery-card__image" 
-           loading="lazy">
-      <div class="gallery-card__overlay">
-        <div class="gallery-card__title">${img.title[currentLang] || img.title.en}</div>
-        <div class="gallery-card__date">${new Date(img.date).toLocaleDateString()}</div>
-      </div>
-    </div>
-  `).join('');
+  if (urgentNotices.length > 0) {
+    ticker.innerHTML = urgentNotices.map(notice => `
+      <span class="notice-ticker__item">
+        ⚠️ ${notice.title[currentLang] || notice.title.en}
+      </span>
+    `).join('');
+  }
 }
 
 // ========== Initialize CMS Content ==========
@@ -380,8 +432,9 @@ function initializeSanityCMS() {
     renderHomepageNotices();
   }
 
-  if (document.getElementById('homepageGalleryGrid')) {
-    renderHomepageGallery();
+  // Notice ticker (on homepage)
+  if (document.querySelector('.notice-ticker__content')) {
+    renderNoticeTicker();
   }
 
   if (document.getElementById('facultyGrid')) {
@@ -421,7 +474,7 @@ window.sanityCMS = {
   renderFaculty,
   renderToppers,
   renderHomepageNotices,
-  renderHomepageGallery,
+  renderNoticeTicker,
   refresh: initializeSanityCMS
 };
 

@@ -5,9 +5,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Government Senior Secondary School Budhwali - Empowering education in rural Rajasthan. Join us for quality education and bright future.">
-    <meta name="keywords" content="GSSS Budhwali, Government School, Rajasthan, Education, Secondary School">
-    <title>GSSS Budhwali - Government Senior Secondary School Budhwali</title>
+        content="Government Senior Secondary School Budhwali, Village Budhwali, Ratangarh, Churu, Rajasthan - Quality education for all. Join us for academic excellence and bright future.">
+    <meta name="keywords"
+        content="GSSS Budhwali, Government School Budhwali, Budhwali School, Ratangarh School, Churu Education, Village Budhwali, Rajkiya Uchch Madhyamik Vidyalaya">
+    <title>GSSS Budhwali - Government Senior Secondary School, Village Budhwali, Ratangarh, Churu</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="GSSS Budhwali - Government Senior Secondary School">
+    <meta property="og:description" content="Quality education in Village Budhwali, Ratangarh, Churu, Rajasthan">
+    <meta property="og:image" content="https://gsss-budhwali.vercel.app/assets/images/og-image.png">
+
+    <!-- Schema.org for Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "Government Senior Secondary School Budhwali",
+      "alternateName": "GSSS Budhwali",
+      "url": "https://gsss-budhwali.vercel.app",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Village Budhwali",
+        "addressLocality": "Ratangarh",
+        "addressRegion": "Rajasthan",
+        "postalCode": "331505",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 27.93675315300336,
+        "longitude": 74.61067646759099
+      },
+      "telephone": "+91-81122-87006",
+      "email": "gsssbudhwali@gmail.com"
+    }
+    </script>
 
     <!-- Preconnect to Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,6 +54,7 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/carousel.css">
     <link rel="stylesheet" href="css/animations.css">
 
     <!-- Favicon -->
@@ -42,7 +76,8 @@
         <div class="header__main">
             <div class="container">
                 <div class="header__content">
-                    <div class="header__logo">
+                    <a href="index.html" class="header__logo"
+                        style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: var(--space-md);">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg"
                             alt="National Emblem of India" class="header__emblem">
                         <div class="header__title">
@@ -51,7 +86,7 @@
                             <p class="header__name-hindi lang-en">Government Senior Secondary School Budhwali</p>
                             <p class="header__name-hindi lang-hi hidden">बुधवाली,चूरू</p>
                         </div>
-                    </div>
+                    </a>
 
                     <div class="header__actions">
                         <a href="gallery.html" class="btn btn--outline">
@@ -572,10 +607,8 @@
                 <p class="section-heading__subtitle lang-hi hidden">स्कूली जीवन की झलकियां</p>
             </div>
 
-            <!-- Gallery rendered by Sanity -->
-            <div class="grid grid--3" id="homepageGalleryGrid"></div>
 
-            <div class="text-center mt-xl">
+            <div class="text-center">
                 <a href="gallery.html" class="btn btn--primary">
                     <span class="lang-en">View Full Gallery</span>
                     <span class="lang-hi hidden">पूरी गैलरी देखें</span>
@@ -594,8 +627,24 @@
                 <p class="section-heading__subtitle lang-hi hidden">समर्पित शिक्षक भविष्य का निर्माण कर रहे हैं</p>
             </div>
 
-            <!-- Faculty rendered by Sanity -->
-            <div class="grid grid--4" id="facultyGrid"></div>
+            <!-- Faculty Carousel -->
+            <div class="faculty-carousel-container">
+                <button class="carousel-nav carousel-nav--prev" id="facultyPrev" aria-label="Previous faculty">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <div class="faculty-carousel" id="facultyCarousel">
+                    <div class="grid grid--5" id="facultyGrid"></div>
+                </div>
+                <button class="carousel-nav carousel-nav--next" id="facultyNext" aria-label="Next faculty">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
         </div>
     </section>
 
@@ -783,8 +832,6 @@
         </svg>
     </a>
 
-    <!-- Chart.js Library -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
     <!-- Sanity CMS Integration -->
     <script src="js/sanity.js"></script>

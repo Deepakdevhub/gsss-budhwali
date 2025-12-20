@@ -1,0 +1,49 @@
+/* Faculty Carousel Styles */
+.faculty-carousel-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    margin-top: var(--space-xl);
+}
+
+.faculty-carousel {
+    flex: 1;
+    overflow: hidden;
+}
+
+.carousel-nav {
+    background: var(--color-saffron);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-md);
+    flex-shrink: 0;
+}
+
+.carousel-nav:hover {
+    background: var(--color-green);
+    transform: scale(1.1);
+    box-shadow: var(--shadow-lg);
+}
+
+.carousel-nav svg {
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .faculty-carousel-container {
+        gap: var(--space-sm);
+    }
+    
+    .carousel-nav {
+        width: 40px;
+        height: 40px;
+    }
+}
