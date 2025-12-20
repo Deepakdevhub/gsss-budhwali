@@ -55,101 +55,140 @@
             border-color: transparent;
         }
 
+        /* FULL-SCREEN LIGHTBOX */
         .lightbox {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: var(--z-modal);
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 1000;
             align-items: center;
             justify-content: center;
-            padding: var(--space-lg);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .lightbox.active {
             display: flex;
+            opacity: 1;
+            animation: fadeIn 0.3s ease;
         }
 
-        .lightbox__content {
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .lightbox__container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox__image-wrapper {
+            position: relative;
             max-width: 90%;
             max-height: 90%;
-            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .lightbox__image {
             max-width: 100%;
-            max-height: 80vh;
+            max-height: 90vh;
             object-fit: contain;
-            border-radius: var(--radius-lg);
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: zoomIn 0.3s ease;
         }
 
-        .lightbox__info {
-            background: var(--color-white);
-            padding: var(--space-md);
-            border-radius: var(--radius-md);
-            margin-top: var(--space-md);
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Dark transparent overlay ON the photo */
+        .lightbox__overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 70%, transparent 100%);
+            color: white;
+            padding: 2rem 1.5rem 1.5rem;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .lightbox__image-wrapper:hover .lightbox__overlay {
+            transform: translateY(0);
         }
 
         .lightbox__title {
-            font-size: var(--text-xl);
-            font-weight: 600;
-            color: var(--color-text);
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 700;
             margin-bottom: 0.5rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .lightbox__description {
-            color: var(--color-text-secondary);
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
             margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.5;
         }
 
         .lightbox__date {
-            font-size: var(--text-sm);
-            color: var(--color-text-muted);
+            font-size: clamp(0.8rem, 1.5vw, 0.95rem);
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
         }
 
-        .lightbox__close {
-            position: absolute;
-            top: -40px;
-            right: 0;
-            width: 40px;
-            height: 40px;
-            background: var(--color-white);
-            border: none;
-            border-radius: var(--radius-full);
-            font-size: 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all var(--transition-base);
-        }
-
-        .lightbox__close:hover {
-            background: var(--color-saffron);
-            color: var(--color-white);
-            transform: rotate(90deg);
-        }
-
+        /* Beautiful Navigation Buttons */
         .lightbox__nav {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.9);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--color-saffron), var(--color-green));
             border: none;
-            border-radius: var(--radius-full);
-            font-size: 24px;
+            border-radius: 50%;
             cursor: pointer;
-            transition: all var(--transition-base);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.9;
+            z-index: 10;
         }
 
         .lightbox__nav:hover {
-            background: var(--color-saffron);
-            color: var(--color-white);
+            opacity: 1;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 8px 20px rgba(255, 153, 51, 0.6);
         }
 
         .lightbox__nav--prev {
@@ -158,6 +197,87 @@
 
         .lightbox__nav--next {
             right: 20px;
+        }
+
+        .lightbox__nav svg {
+            width: 30px;
+            height: 30px;
+            fill: white;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        /* Close Button */
+        .lightbox__close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            color: #333;
+            font-weight: 300;
+        }
+
+        .lightbox__close:hover {
+            background: var(--color-saffron);
+            color: white;
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 8px 20px rgba(255, 153, 51, 0.6);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .lightbox__image-wrapper {
+                max-width: 95%;
+                max-height: 95%;
+            }
+
+            .lightbox__image {
+                max-height: 85vh;
+            }
+
+            .lightbox__nav {
+                width: 50px;
+                height: 50px;
+            }
+
+            .lightbox__nav--prev {
+                left: 10px;
+            }
+
+            .lightbox__nav--next {
+                right: 10px;
+            }
+
+            .lightbox__nav svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .lightbox__close {
+                width: 45px;
+                height: 45px;
+                top: 15px;
+                right: 15px;
+            }
+
+            .lightbox__overlay {
+                padding: 1.5rem 1rem 1rem;
+            }
+
+            /* Always show overlay on mobile */
+            .lightbox__overlay {
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -329,15 +449,25 @@
 
     <!-- Lightbox -->
     <div class="lightbox" id="lightbox">
-        <div class="lightbox__content">
+        <div class="lightbox__container">
             <button class="lightbox__close" id="lightboxClose">×</button>
-            <button class="lightbox__nav lightbox__nav--prev" id="lightboxPrev">‹</button>
-            <button class="lightbox__nav lightbox__nav--next" id="lightboxNext">›</button>
-            <img src="" alt="" class="lightbox__image" id="lightboxImage">
-            <div class="lightbox__info">
-                <h3 class="lightbox__title" id="lightboxTitle"></h3>
-                <p class="lightbox__description" id="lightboxDescription"></p>
-                <p class="lightbox__date" id="lightboxDate"></p>
+            <button class="lightbox__nav lightbox__nav--prev" id="lightboxPrev">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg>
+            </button>
+            <button class="lightbox__nav lightbox__nav--next" id="lightboxNext">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                </svg>
+            </button>
+            <div class="lightbox__image-wrapper">
+                <img src="" alt="" class="lightbox__image" id="lightboxImage">
+                <div class="lightbox__overlay">
+                    <h3 class="lightbox__title" id="lightboxTitle"></h3>
+                    <p class="lightbox__description" id="lightboxDescription"></p>
+                    <p class="lightbox__date" id="lightboxDate"></p>
+                </div>
             </div>
         </div>
     </div>

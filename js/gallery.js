@@ -218,6 +218,34 @@ function initializeLightbox() {
                 break;
         }
     });
+
+    // Touch gesture support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    lightbox.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    lightbox.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+        const swipeThreshold = 50; // minimum distance for swipe
+        const diff = touchStartX - touchEndX;
+
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                // Swipe left - next image
+                nextImage();
+            } else {
+                // Swipe right - previous image
+                prevImage();
+            }
+        }
+    }
 }
 
 // ========== Lazy Loading Enhancement ==========
