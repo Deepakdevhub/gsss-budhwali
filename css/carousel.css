@@ -15,31 +15,22 @@
     overflow-y: hidden;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    /* Firefox */
-    -ms-overflow-style: none;
-    /* IE/Edge */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
 }
 
 .faculty-carousel::-webkit-scrollbar,
 .toppers-carousel::-webkit-scrollbar {
-    display: none;
-    /* Chrome/Safari */
+    display: none; /* Chrome/Safari */
 }
 
-/* Faculty Belt - Horizontal layout */
+/* Faculty/Toppers Belt - Horizontal layout */
 .faculty-belt,
 .toppers-belt {
     display: flex;
     gap: var(--space-md);
-    padding: var(--space-sm) 0;
-}
-
-/* Desktop: Show 4 faculty cards */
-.faculty-belt .faculty-card {
-    flex: 0 0 calc((100% - 3 * var(--space-md)) / 4);
-    min-width: 160px;
-    max-width: 200px;
+    padding: var(--space-sm) var(--space-xs);
+    width: max-content;
 }
 
 /* Navigation Buttons */
@@ -93,23 +84,32 @@
 }
 
 @keyframes fadeInOut {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
 
-    0%,
-    100% {
-        opacity: 0.5;
+/* Desktop: Show 4 cards */
+@media (min-width: 769px) {
+    .faculty-belt .faculty-card,
+    .toppers-belt .topper-card {
+        flex: 0 0 220px;
+        min-width: 180px;
+        max-width: 220px;
     }
-
-    50% {
-        opacity: 1;
+    
+    .carousel-nav {
+        display: flex;
+    }
+    
+    .scroll-hint {
+        display: none;
     }
 }
 
 /* Mobile Styles */
 @media (max-width: 768px) {
-
     .faculty-carousel-container,
     .toppers-carousel-container {
-        flex-direction: column;
         gap: var(--space-sm);
     }
 
@@ -123,34 +123,20 @@
         display: block;
     }
 
+    /* Single card at a time on mobile */
     .faculty-belt .faculty-card,
     .toppers-belt .topper-card {
-        flex: 0 0 200px;
-        min-width: 200px;
-    }
-
-    /* Add padding for scroll */
-    .faculty-belt,
-    .toppers-belt {
-        padding: var(--space-sm) var(--space-xs);
+        flex: 0 0 85vw;
+        min-width: 260px;
+        max-width: 320px;
     }
 }
 
-/* Desktop: show nav buttons */
-@media (min-width: 769px) {
-    .carousel-nav {
-        display: flex;
-    }
-
-    .scroll-hint {
-        display: none;
-    }
-}
-
-/* Large screens: slightly bigger cards */
+/* Large screens */
 @media (min-width: 1200px) {
-    .faculty-belt .faculty-card {
-        flex: 0 0 calc((100% - 3 * var(--space-md)) / 4);
-        max-width: 220px;
+    .faculty-belt .faculty-card,
+    .toppers-belt .topper-card {
+        flex: 0 0 240px;
+        max-width: 240px;
     }
 }

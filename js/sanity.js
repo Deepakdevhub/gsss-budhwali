@@ -324,7 +324,7 @@ function setupScrollNavigation(type) {
   prevBtn.disabled = true;
 }
 
-// ========== Toppers Renderer ==========
+// ========== Toppers Renderer with Touch Scroll ==========
 async function renderToppers() {
   const container = document.getElementById('toppersGrid');
   if (!container) return;
@@ -333,25 +333,41 @@ async function renderToppers() {
 
   if (!toppers || toppers.length === 0) {
     console.log('No toppers found');
-    container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;"><span class="lang-en">No toppers data available yet.</span><span class="lang-hi hidden">अभी तक कोई टॉपर डेटा उपलब्ध नहीं है।</span></p>';
+    container.innerHTML = '<p class="text-center text-muted"><span class="lang-en">No toppers data available yet.</span><span class="lang-hi hidden">अभी तक कोई टॉपर डेटा उपलब्ध नहीं है।</span></p>';
     return;
   }
 
   const currentLang = window.gsssApp ? window.gsssApp.currentLang() : 'en';
+  const isHomepage = document.getElementById('toppersCarousel');
 
-  container.innerHTML = toppers.map((topper, index) => `
-    <div class="topper-card reveal ${index % 4 === 1 ? 'reveal-delay-1' : index % 4 === 2 ? 'reveal-delay-2' : index % 4 === 3 ? 'reveal-delay-3' : ''}">
-      <img src="${sanityImageUrl(topper.photo, { width: 400, fit: 'max', quality: 80 })}" 
-           alt="${topper.name[currentLang] || topper.name.en}" 
-           class="topper-card__photo">
-      <div class="topper-card__info">
+  if (isHomepage) {
+    // Carousel layout for homepage
+    container.innerHTML = toppers.map((topper) => `
+      <div class="topper-card">
+        <img src="${sanityImageUrl(topper.photo, { width: 160, fit: 'max', quality: 80 })}" 
+             alt="${topper.name[currentLang] || topper.name.en}" 
+             class="topper-card__photo">
         <div class="topper-card__name">${topper.name[currentLang] || topper.name.en}</div>
-        <div class="topper-card__achievement">
-          ${topper.percentage} - ${topper.year}
+        <div class="topper-card__achievement">${topper.percentage} - ${topper.year}</div>
+      </div>
+    `).join('');
+
+    // Setup scroll button navigation for desktop
+    setupScrollNavigation('toppers');
+  } else {
+    // Grid layout for dedicated page
+    container.innerHTML = toppers.map((topper, index) => `
+      <div class="topper-card reveal ${index % 4 === 1 ? 'reveal-delay-1' : index % 4 === 2 ? 'reveal-delay-2' : index % 4 === 3 ? 'reveal-delay-3' : ''}">
+        <img src="${sanityImageUrl(topper.photo, { width: 400, fit: 'max', quality: 80 })}" 
+             alt="${topper.name[currentLang] || topper.name.en}" 
+             class="topper-card__photo">
+        <div class="topper-card__info">
+          <div class="topper-card__name">${topper.name[currentLang] || topper.name.en}</div>
+          <div class="topper-card__achievement">${topper.percentage} - ${topper.year}</div>
         </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  }
 }
 
 // ========== Homepage Notices Renderer (Limited) ==========

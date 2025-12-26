@@ -442,67 +442,56 @@
     font-weight: 500;
 }
 
-/* ========== Topper Card ========== */
+/* ========== Topper Card (Compact like Faculty) ========== */
 .topper-card {
-    position: relative;
-    overflow: hidden;
+    text-align: center;
+    padding: var(--space-md);
+    background: var(--color-white);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-md);
     transition: all var(--transition-base);
+    flex-shrink: 0;
+    position: relative;
 }
 
 .topper-card::before {
     content: '🏆';
     position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 2rem;
+    top: 8px;
+    right: 8px;
+    font-size: 1.2rem;
     z-index: 2;
-    animation: trophy 2s ease-in-out infinite;
-}
-
-@keyframes trophy {
-
-    0%,
-    100% {
-        transform: rotate(0deg);
-    }
-
-    25% {
-        transform: rotate(-10deg);
-    }
-
-    75% {
-        transform: rotate(10deg);
-    }
 }
 
 .topper-card:hover {
-    transform: scale(1.05);
+    transform: translateY(-5px);
     box-shadow: var(--shadow-xl);
 }
 
 .topper-card__photo {
-    width: 100%;
-    aspect-ratio: 3/4;
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-full);
     object-fit: cover;
+    margin: 0 auto var(--space-sm);
+    border: 3px solid var(--color-green);
 }
 
 .topper-card__info {
-    padding: var(--space-md);
-    background: linear-gradient(135deg, var(--color-saffron), var(--color-green));
-    color: var(--color-white);
+    padding: var(--space-sm);
 }
 
 .topper-card__name {
-    font-size: var(--text-lg);
-    font-weight: 700;
+    font-size: var(--text-base);
+    font-weight: 600;
     margin-bottom: 0.25rem;
+    color: var(--color-text);
 }
 
 .topper-card__achievement {
     font-size: var(--text-sm);
-    opacity: 0.95;
+    color: var(--color-green);
+    font-weight: 500;
 }
 
 /* ========== Contact Form ========== */
