@@ -243,9 +243,10 @@ async function renderNotices() {
   `).join('');
 }
 
-// ========== Faculty Renderer with Carousel ==========
-let facultyPage = 0;
+// ========== Faculty Renderer with Belt Carousel ==========
+let facultyOffset = 0;
 let totalFaculty = [];
+const CARD_WIDTH = 200; // Approximate card width including gap
 
 async function renderFaculty() {
   let container = document.getElementById('facultyGrid');
@@ -255,24 +256,23 @@ async function renderFaculty() {
 
   if (!faculty || faculty.length === 0) {
     console.log('No faculty found');
-    container.innerHTML = '<p class="text-center text-muted" style="grid-column: 1 / -1;">No faculty data available.</p>';
+    container.innerHTML = '<p class="text-center text-muted">No faculty data available.</p>';
     return;
   }
 
   const currentLang = window.gsssApp ? window.gsssApp.currentLang() : 'en';
   totalFaculty = faculty;
 
-  // On homepage: show 5 at a time with carousel
+  // On homepage: render all faculty in a belt for smooth scrolling
   const isHomepage = document.getElementById('facultyCarousel');
 
   if (isHomepage) {
-    const pageSize = 5;
-    const start = facultyPage * pageSize;
-    const end = start + pageSize;
-    const visibleFaculty = faculty.slice(start, end);
+    // For mobile auto-scroll, duplicate faculty for seamless loop
+    const isMobile = window.innerWidth <= 768;
+    const facultyToRender = isMobile ? [...faculty, ...faculty] : faculty;
 
-    container.innerHTML = visibleFaculty.map((member, index) => `
-      <div class="faculty-card reveal">
+    container.innerHTML = facultyToRender.map((member, index) => `
+      <div class="faculty-card">
         <img src="${sanityImageUrl(member.photo, { width: 200, fit: 'max', quality: 80 })}" 
              alt="${member.name}" 
              class="faculty-card__photo">
@@ -284,10 +284,12 @@ async function renderFaculty() {
       </div>
     `).join('');
 
-    // Setup navigation
-    setupFacultyCarousel(faculty.length, pageSize);
+    // Setup navigation for desktop
+    if (!isMobile) {
+      setupFacultyBeltCarousel(faculty.length);
+    }
   } else {
-    // Full faculty page: show all
+    // Full faculty page: show all in grid
     container.innerHTML = faculty.map((member, index) => `
       <div class="faculty-card reveal">
         <img src="${sanityImageUrl(member.photo, { width: 400, fit: 'max', quality: 80 })}" 
@@ -303,32 +305,46 @@ async function renderFaculty() {
   }
 }
 
-function setupFacultyCarousel(total, pageSize) {
+function setupFacultyBeltCarousel(total) {
   const prevBtn = document.getElementById('facultyPrev');
   const nextBtn = document.getElementById('facultyNext');
-  const maxPage = Math.ceil(total / pageSize) - 1;
+  const container = document.getElementById('facultyGrid');
 
-  if (prevBtn && nextBtn) {
-    prevBtn.onclick = () => {
-      if (facultyPage > 0) {
-        facultyPage--;
-        renderFaculty();
-      }
-    };
+  if (!prevBtn || !nextBtn || !container) return;
 
-    nextBtn.onclick = () => {
-      if (facultyPage < maxPage) {
-        facultyPage++;
-        renderFaculty();
-      }
-    };
+  // Calculate visible cards based on container width
+  const containerWidth = container.parentElement.offsetWidth;
+  const cardElements = container.querySelectorAll('.faculty-card');
+  if (cardElements.length === 0) return;
+
+  const cardWidth = cardElements[0].offsetWidth + 32; // include gap
+  const visibleCards = Math.floor(containerWidth / cardWidth);
+  const maxOffset = Math.max(0, total - visibleCards);
+
+  function updateBeltPosition() {
+    container.style.transform = `translateX(-${facultyOffset * cardWidth}px)`;
 
     // Update button states
-    prevBtn.style.opacity = facultyPage === 0 ? '0.3' : '1';
-    prevBtn.style.cursor = facultyPage === 0 ? 'not-allowed' : 'pointer';
-    nextBtn.style.opacity = facultyPage === maxPage ? '0.3' : '1';
-    nextBtn.style.cursor = facultyPage === maxPage ? 'not-allowed' : 'pointer';
+    prevBtn.disabled = facultyOffset === 0;
+    nextBtn.disabled = facultyOffset >= maxOffset;
   }
+
+  prevBtn.onclick = () => {
+    if (facultyOffset > 0) {
+      facultyOffset--;
+      updateBeltPosition();
+    }
+  };
+
+  nextBtn.onclick = () => {
+    if (facultyOffset < maxOffset) {
+      facultyOffset++;
+      updateBeltPosition();
+    }
+  };
+
+  // Initial state
+  updateBeltPosition();
 }
 
 // ========== Toppers Renderer ==========

@@ -10,6 +10,7 @@ let currentLang = 'en'; //Default language
 const langToggle = document.getElementById('langToggle');
 const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 const header = document.getElementById('header');
+const scrollToTopBtn = document.getElementById('scrollToTopBtn');
 
 // ========== Language Toggle ==========
 function toggleLanguage() {
@@ -82,89 +83,12 @@ function smoothScroll(target) {
     }
 }
 
-// ========== Initialize Chart ==========
-function initializeAdmissionChart() {
-    const canvas = document.getElementById('admissionChart');
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-
-    const data = {
-        labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
-        datasets: [{
-            label: currentLang === 'en' ? 'Total Students' : 'कुल छात्र',
-            data: [420, 465, 502, 548, 612, 685],
-            backgroundColor: 'rgba(255, 153, 51, 0.2)',
-            borderColor: '#FF9933',
-            borderWidth: 3,
-            fill: true,
-            tension: 0.4,
-            pointBackgroundColor: '#FF9933',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-            pointRadius: 6,
-            pointHoverRadius: 8
-        }]
-    };
-
-    const config = {
-        type: 'line',
-        data: data,
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                        font: {
-                            size: 14,
-                            family: "'Poppins', sans-serif"
-                        }
-                    }
-                },
-                title: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    padding: 12,
-                    titleFont: {
-                        size: 14
-                    },
-                    bodyFont: {
-                        size: 13
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        font: {
-                            size: 12
-                        }
-                    },
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)'
-                    }
-                },
-                x: {
-                    ticks: {
-                        font: {
-                            size: 12
-                        }
-                    },
-                    grid: {
-                        display: false
-                    }
-                }
-            }
-        }
-    };
-
-    new Chart(ctx, config);
+// ========== Scroll to Top (Logo Click) ==========
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
 }
 
 // ========== Confetti Easter Egg (for Toppers Section) ==========
@@ -286,49 +210,7 @@ function initializeTableSorting() {
     // For now, tables are static
 }
 
-// ========== Back to Top Button (Optional) ==========
-function initializeBackToTop() {
-    const backToTop = document.createElement('button');
-    backToTop.innerHTML = '↑';
-    backToTop.className = 'back-to-top';
-    backToTop.style.cssText = `
-    position: fixed;
-    bottom: 100px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #FF9933, #138808);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 24px;
-    cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 299;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  `;
 
-    document.body.appendChild(backToTop);
-
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 500) {
-            backToTop.style.opacity = '1';
-            backToTop.style.visibility = 'visible';
-        } else {
-            backToTop.style.opacity = '0';
-            backToTop.style.visibility = 'hidden';
-        }
-    });
-
-    backToTop.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
-}
 
 // ========== Performance Monitoring ==========
 function logPerformance() {
@@ -361,6 +243,11 @@ function initializeEventListeners() {
         mobileMenuBtn.addEventListener('click', toggleMobileMenu);
     }
 
+    // Scroll to top (logo click)
+    if (scrollToTopBtn) {
+        scrollToTopBtn.addEventListener('click', scrollToTop);
+    }
+
     // Scroll events
     window.addEventListener('scroll', () => {
         handleScroll();
@@ -381,14 +268,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeLazyLoading();
     initializeParallax();
     initializeToppersEasterEgg();
-    initializeBackToTop();
-
-    // Initialize chart when Chart.js is loaded
-    if (typeof Chart !== 'undefined') {
-        initializeAdmissionChart();
-    } else {
-        console.warn('Chart.js not loaded. Chart will not be displayed.');
-    }
 
     // Log performance metrics
     logPerformance();

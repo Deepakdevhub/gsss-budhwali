@@ -29,8 +29,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: var(--space-md);
-    flex-wrap: wrap;
+    gap: var(--space-sm);
+    flex-wrap: nowrap;
 }
 
 .header__logo {
@@ -40,8 +40,8 @@
 }
 
 .header__emblem {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
 }
 
@@ -67,7 +67,14 @@
 .header__actions {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: var(--space-xs);
+    flex-shrink: 0;
+}
+
+/* Smaller header buttons */
+.header__actions .btn {
+    padding: 0.5rem 0.875rem;
+    font-size: var(--text-sm);
 }
 
 .lang-toggle {
@@ -566,47 +573,7 @@
     opacity: 0.8;
 }
 
-/* ========== WhatsApp Float Button ========== */
-.whatsapp-float {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    background: #25D366;
-    border-radius: var(--radius-full);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-xl);
-    z-index: var(--z-fixed);
-    cursor: pointer;
-    transition: all var(--transition-base);
-    animation: pulse 2s ease-in-out infinite;
-}
 
-.whatsapp-float:hover {
-    transform: scale(1.1);
-    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
-}
-
-.whatsapp-float svg {
-    width: 32px;
-    height: 32px;
-    fill: white;
-}
-
-@keyframes pulse {
-
-    0%,
-    100% {
-        box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
-    }
-
-    50% {
-        box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6);
-    }
-}
 
 /* ========== Notice Ticker ========== */
 .notice-ticker {

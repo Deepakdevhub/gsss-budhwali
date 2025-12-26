@@ -1,15 +1,27 @@
-/* Faculty Carousel Styles */
+/* Faculty Carousel Styles - Belt Animation */
 .faculty-carousel-container {
     position: relative;
     display: flex;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-md);
     margin-top: var(--space-xl);
 }
 
 .faculty-carousel {
     flex: 1;
     overflow: hidden;
+}
+
+/* Faculty Belt - Horizontal layout */
+.faculty-belt {
+    display: flex;
+    gap: var(--space-lg);
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.faculty-belt .faculty-card {
+    flex: 0 0 calc((100% - 4 * var(--space-lg)) / 5);
+    min-width: 180px;
 }
 
 .carousel-nav {
@@ -25,6 +37,7 @@
     transition: all var(--transition-base);
     box-shadow: var(--shadow-md);
     flex-shrink: 0;
+    z-index: 10;
 }
 
 .carousel-nav:hover {
@@ -33,17 +46,79 @@
     box-shadow: var(--shadow-lg);
 }
 
+.carousel-nav:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+}
+
 .carousel-nav svg {
     color: white;
 }
 
+/* Mobile: Auto-scrolling belt */
 @media (max-width: 768px) {
     .faculty-carousel-container {
         gap: var(--space-sm);
+        flex-direction: column;
     }
     
+    .faculty-carousel {
+        width: 100%;
+        overflow: hidden;
+    }
+    
+    .faculty-belt {
+        animation: scrollBelt 20s linear infinite;
+    }
+    
+    .faculty-belt .faculty-card {
+        flex: 0 0 250px;
+        min-width: 250px;
+    }
+    
+    /* Hide navigation buttons on mobile - auto-scroll instead */
     .carousel-nav {
-        width: 40px;
-        height: 40px;
+        display: none;
+    }
+    
+    /* Pause animation on hover/touch */
+    .faculty-carousel:hover .faculty-belt,
+    .faculty-carousel:focus-within .faculty-belt {
+        animation-play-state: paused;
+    }
+}
+
+@keyframes scrollBelt {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Desktop: Show 5-6 cards, manual navigation */
+@media (min-width: 769px) {
+    .carousel-nav {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .faculty-belt {
+        animation: none;
+    }
+    
+    .faculty-belt .faculty-card {
+        flex: 0 0 calc((100% - 4 * var(--space-lg)) / 5);
+        min-width: 160px;
+        max-width: 220px;
+    }
+}
+
+/* Large screens: show 6 cards */
+@media (min-width: 1200px) {
+    .faculty-belt .faculty-card {
+        flex: 0 0 calc((100% - 5 * var(--space-lg)) / 6);
     }
 }
