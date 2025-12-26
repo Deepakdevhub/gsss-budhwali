@@ -1,34 +1,53 @@
-/* Faculty Carousel Styles - Belt Animation */
-.faculty-carousel-container {
+/* Faculty & Toppers Carousel Styles - Touch Scroll */
+.faculty-carousel-container,
+.toppers-carousel-container {
     position: relative;
     display: flex;
     align-items: center;
     gap: var(--space-md);
-    margin-top: var(--space-xl);
+    margin-top: var(--space-lg);
 }
 
-.faculty-carousel {
+.faculty-carousel,
+.toppers-carousel {
     flex: 1;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+}
+
+.faculty-carousel::-webkit-scrollbar,
+.toppers-carousel::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
 }
 
 /* Faculty Belt - Horizontal layout */
-.faculty-belt {
+.faculty-belt,
+.toppers-belt {
     display: flex;
-    gap: var(--space-lg);
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    gap: var(--space-md);
+    padding: var(--space-sm) 0;
 }
 
+/* Desktop: Show 4 faculty cards */
 .faculty-belt .faculty-card {
-    flex: 0 0 calc((100% - 4 * var(--space-lg)) / 5);
-    min-width: 180px;
+    flex: 0 0 calc((100% - 3 * var(--space-md)) / 4);
+    min-width: 160px;
+    max-width: 200px;
 }
 
+/* Navigation Buttons */
 .carousel-nav {
     background: var(--color-saffron);
     border: none;
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
     border-radius: var(--radius-full);
     display: flex;
     align-items: center;
@@ -54,71 +73,84 @@
 
 .carousel-nav svg {
     color: white;
+    width: 20px;
+    height: 20px;
 }
 
-/* Mobile: Auto-scrolling belt */
+/* Touch Scroll Indicator */
+.scroll-hint {
+    display: none;
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
+    margin-top: var(--space-sm);
+    animation: fadeInOut 2s ease-in-out infinite;
+}
+
+.scroll-hint::before {
+    content: '👆';
+    margin-right: 0.5rem;
+}
+
+@keyframes fadeInOut {
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Mobile Styles */
 @media (max-width: 768px) {
-    .faculty-carousel-container {
-        gap: var(--space-sm);
+
+    .faculty-carousel-container,
+    .toppers-carousel-container {
         flex-direction: column;
+        gap: var(--space-sm);
     }
-    
-    .faculty-carousel {
-        width: 100%;
-        overflow: hidden;
-    }
-    
-    .faculty-belt {
-        animation: scrollBelt 20s linear infinite;
-    }
-    
-    .faculty-belt .faculty-card {
-        flex: 0 0 250px;
-        min-width: 250px;
-    }
-    
-    /* Hide navigation buttons on mobile - auto-scroll instead */
+
+    /* Hide navigation buttons on mobile - use touch scroll */
     .carousel-nav {
         display: none;
     }
-    
-    /* Pause animation on hover/touch */
-    .faculty-carousel:hover .faculty-belt,
-    .faculty-carousel:focus-within .faculty-belt {
-        animation-play-state: paused;
+
+    /* Show scroll hint on mobile */
+    .scroll-hint {
+        display: block;
+    }
+
+    .faculty-belt .faculty-card,
+    .toppers-belt .topper-card {
+        flex: 0 0 200px;
+        min-width: 200px;
+    }
+
+    /* Add padding for scroll */
+    .faculty-belt,
+    .toppers-belt {
+        padding: var(--space-sm) var(--space-xs);
     }
 }
 
-@keyframes scrollBelt {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
-}
-
-/* Desktop: Show 5-6 cards, manual navigation */
+/* Desktop: show nav buttons */
 @media (min-width: 769px) {
     .carousel-nav {
-        width: 50px;
-        height: 50px;
+        display: flex;
     }
-    
-    .faculty-belt {
-        animation: none;
-    }
-    
-    .faculty-belt .faculty-card {
-        flex: 0 0 calc((100% - 4 * var(--space-lg)) / 5);
-        min-width: 160px;
-        max-width: 220px;
+
+    .scroll-hint {
+        display: none;
     }
 }
 
-/* Large screens: show 6 cards */
+/* Large screens: slightly bigger cards */
 @media (min-width: 1200px) {
     .faculty-belt .faculty-card {
-        flex: 0 0 calc((100% - 5 * var(--space-lg)) / 6);
+        flex: 0 0 calc((100% - 3 * var(--space-md)) / 4);
+        max-width: 220px;
     }
 }

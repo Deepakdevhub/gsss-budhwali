@@ -402,25 +402,26 @@
 /* ========== Faculty Card ========== */
 .faculty-card {
     text-align: center;
-    padding: var(--space-lg);
+    padding: var(--space-md);
     background: var(--color-white);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
     transition: all var(--transition-base);
+    flex-shrink: 0;
 }
 
 .faculty-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-5px);
     box-shadow: var(--shadow-xl);
 }
 
 .faculty-card__photo {
-    width: 120px;
-    height: 120px;
+    width: 80px;
+    height: 80px;
     border-radius: var(--radius-full);
     object-fit: cover;
-    margin: 0 auto var(--space-md);
-    border: 4px solid var(--color-saffron);
+    margin: 0 auto var(--space-sm);
+    border: 3px solid var(--color-saffron);
     transition: border-color var(--transition-base);
 }
 
@@ -429,14 +430,14 @@
 }
 
 .faculty-card__name {
-    font-size: var(--text-lg);
+    font-size: var(--text-base);
     font-weight: 600;
-    margin-bottom: var(--space-xs);
+    margin-bottom: 0.25rem;
     color: var(--color-text);
 }
 
 .faculty-card__subject {
-    font-size: var(--text-base);
+    font-size: var(--text-sm);
     color: var(--color-green);
     font-weight: 500;
 }

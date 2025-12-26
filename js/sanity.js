@@ -243,10 +243,8 @@ async function renderNotices() {
   `).join('');
 }
 
-// ========== Faculty Renderer with Belt Carousel ==========
-let facultyOffset = 0;
+// ========== Faculty Renderer with Touch Scroll ==========
 let totalFaculty = [];
-const CARD_WIDTH = 200; // Approximate card width including gap
 
 async function renderFaculty() {
   let container = document.getElementById('facultyGrid');
@@ -260,20 +258,15 @@ async function renderFaculty() {
     return;
   }
 
-  const currentLang = window.gsssApp ? window.gsssApp.currentLang() : 'en';
   totalFaculty = faculty;
 
-  // On homepage: render all faculty in a belt for smooth scrolling
+  // On homepage: render all faculty in a scrollable belt
   const isHomepage = document.getElementById('facultyCarousel');
 
   if (isHomepage) {
-    // For mobile auto-scroll, duplicate faculty for seamless loop
-    const isMobile = window.innerWidth <= 768;
-    const facultyToRender = isMobile ? [...faculty, ...faculty] : faculty;
-
-    container.innerHTML = facultyToRender.map((member, index) => `
+    container.innerHTML = faculty.map((member) => `
       <div class="faculty-card">
-        <img src="${sanityImageUrl(member.photo, { width: 200, fit: 'max', quality: 80 })}" 
+        <img src="${sanityImageUrl(member.photo, { width: 160, fit: 'max', quality: 80 })}" 
              alt="${member.name}" 
              class="faculty-card__photo">
         <div class="faculty-card__name">${member.name}</div>
@@ -284,13 +277,11 @@ async function renderFaculty() {
       </div>
     `).join('');
 
-    // Setup navigation for desktop
-    if (!isMobile) {
-      setupFacultyBeltCarousel(faculty.length);
-    }
+    // Setup scroll button navigation for desktop
+    setupScrollNavigation('faculty');
   } else {
     // Full faculty page: show all in grid
-    container.innerHTML = faculty.map((member, index) => `
+    container.innerHTML = faculty.map((member) => `
       <div class="faculty-card reveal">
         <img src="${sanityImageUrl(member.photo, { width: 400, fit: 'max', quality: 80 })}" 
              alt="${member.name}" 
@@ -305,46 +296,32 @@ async function renderFaculty() {
   }
 }
 
-function setupFacultyBeltCarousel(total) {
-  const prevBtn = document.getElementById('facultyPrev');
-  const nextBtn = document.getElementById('facultyNext');
-  const container = document.getElementById('facultyGrid');
+// Generic scroll navigation for carousels
+function setupScrollNavigation(type) {
+  const prevBtn = document.getElementById(`${type}Prev`);
+  const nextBtn = document.getElementById(`${type}Next`);
+  const carousel = document.getElementById(`${type}Carousel`);
 
-  if (!prevBtn || !nextBtn || !container) return;
+  if (!prevBtn || !nextBtn || !carousel) return;
 
-  // Calculate visible cards based on container width
-  const containerWidth = container.parentElement.offsetWidth;
-  const cardElements = container.querySelectorAll('.faculty-card');
-  if (cardElements.length === 0) return;
-
-  const cardWidth = cardElements[0].offsetWidth + 32; // include gap
-  const visibleCards = Math.floor(containerWidth / cardWidth);
-  const maxOffset = Math.max(0, total - visibleCards);
-
-  function updateBeltPosition() {
-    container.style.transform = `translateX(-${facultyOffset * cardWidth}px)`;
-
-    // Update button states
-    prevBtn.disabled = facultyOffset === 0;
-    nextBtn.disabled = facultyOffset >= maxOffset;
-  }
+  const scrollAmount = 220; // Card width + gap
 
   prevBtn.onclick = () => {
-    if (facultyOffset > 0) {
-      facultyOffset--;
-      updateBeltPosition();
-    }
+    carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
   };
 
   nextBtn.onclick = () => {
-    if (facultyOffset < maxOffset) {
-      facultyOffset++;
-      updateBeltPosition();
-    }
+    carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   };
 
+  // Update button states on scroll
+  carousel.addEventListener('scroll', () => {
+    prevBtn.disabled = carousel.scrollLeft <= 0;
+    nextBtn.disabled = carousel.scrollLeft >= (carousel.scrollWidth - carousel.clientWidth - 10);
+  });
+
   // Initial state
-  updateBeltPosition();
+  prevBtn.disabled = true;
 }
 
 // ========== Toppers Renderer ==========
