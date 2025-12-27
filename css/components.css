@@ -105,34 +105,63 @@
 }
 
 @media (max-width: 768px) {
+    .header__content {
+        flex-wrap: wrap;
+    }
+
     .mobile-menu-btn {
         display: block;
     }
 
-    /* Hide desktop-only buttons on mobile */
+    /* Hide desktop buttons on mobile by default */
     .header__actions>.btn--outline,
     .header__actions>.btn--primary {
         display: none;
     }
 
-    /* Keep mobile menu and lang toggle always visible */
+    /* Keep mobile menu button and lang toggle always visible */
     .mobile-menu-btn,
     .lang-toggle {
         display: block !important;
     }
 
-    /* Show action buttons when menu is toggled */
+    /* Mobile menu dropdown */
     .header__actions.active {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--color-white);
+        box-shadow: var(--shadow-lg);
+        padding: var(--space-md);
         display: flex;
         flex-direction: column;
-        width: 100%;
         gap: var(--space-sm);
-        margin-top: var(--space-sm);
+        z-index: 100;
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .header__actions.active>.btn {
-        display: inline-flex !important;
+        display: flex !important;
+        justify-content: center;
         width: 100%;
+    }
+
+    /* Make header position relative for dropdown */
+    .header__main {
+        position: relative;
     }
 }
 
