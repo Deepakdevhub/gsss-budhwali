@@ -12,6 +12,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    <!-- Preconnect to Sanity CDN (faster image loading) -->
+    <link rel="preconnect" href="https://cdn.sanity.io" crossorigin>
+
     <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght=400;600;700&family=Inter:wght@400;500;600&family=Roboto:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap"
@@ -310,8 +313,8 @@
 
 
     <!-- Scripts -->
-    <script src="js/sanity.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/sanity.js" defer></script>
+    <script src="js/main.js" defer></script>
     <script>
         // Notice page specific JavaScript
         const filterButtons = document.querySelectorAll('.filter-btn');

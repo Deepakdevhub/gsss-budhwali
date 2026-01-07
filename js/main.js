@@ -214,21 +214,22 @@ function initializeTableSorting() {
 
 // ========== Performance Monitoring ==========
 function logPerformance() {
-    if ('performance' in window) {
-        window.addEventListener('load', () => {
-            const perfData = performance.timing;
-            const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
-            const connectTime = perfData.responseEnd - perfData.requestStart;
+    window.addEventListener('load', () => {
+        // Use modern Performance API
+        const entries = performance.getEntriesByType('navigation');
+        if (entries.length > 0) {
+            const navTiming = entries[0];
+            const pageLoadTime = Math.round(navTiming.loadEventEnd - navTiming.startTime);
+            const connectTime = Math.round(navTiming.responseEnd - navTiming.requestStart);
 
             console.log(`Page Load Time: ${pageLoadTime}ms`);
             console.log(`Server Connect Time: ${connectTime}ms`);
 
-            // Log to console for development
             if (pageLoadTime > 3000) {
                 console.warn('Page load time exceeds 3 seconds. Consider optimization.');
             }
-        });
-    }
+        }
+    });
 }
 
 // ========== Event Listeners ==========
